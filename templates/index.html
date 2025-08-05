@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Docker Swarm + MySQL Demo</title>
+</head>
+<body>
+    <h1>MySQL Swarm Integration</h1>
+    
+    <form id="messageForm">
+        <input type="text" id="message" placeholder="Enter message">
+        <button type="submit">Submit</button>
+    </form>
+
+    <div id="messages"></div>
+
+    <script>
+        // Fetch messages on load
+        fetch('/api/data')
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById('messages').innerHTML = 
+                    data.map(msg => `<p>${msg.content}</p>`).join('');
+            });
+
+        // Handle form submission
+        document.getElementById('messageForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            fetch('/api/data', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ content: document.getElementById('message').value })
+            }).then(() => location.reload());
+        });
+    </script>
+</body>
+</html>
